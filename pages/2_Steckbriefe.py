@@ -86,7 +86,8 @@ st.markdown(
 df_data = load_data()
 df_bess_data = load_bess_data()
 
-st.title("Steckbriefe")
+st.title("Voltpark VNB Tool")
+st.subheader("Steckbriefe")
 st.caption("Einzelansicht fuer einen ausgewaehlten VNB")
 
 if df_data.empty:
