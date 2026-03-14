@@ -1,0 +1,5 @@
+envvnb/
+envvnb_broken_backup_20260314/
+__pycache__/
+.DS_Store
+.ipynb_checkpoints/
