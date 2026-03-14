@@ -32,6 +32,47 @@ st.set_page_config(
     layout="wide",
 )
 
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 2.25rem;
+        padding-bottom: 4rem;
+    }
+
+    h1, h2, h3 {
+        margin-top: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    [data-testid="stMetric"] {
+        background: rgba(22, 27, 38, 0.82);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    [data-testid="stMetricLabel"] {
+        padding-bottom: 0.25rem;
+    }
+
+    [data-testid="stVerticalBlock"] > [data-testid="element-container"]:has([data-testid="stVegaLiteChart"]) {
+        background: rgba(15, 23, 42, 0.52);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 20px;
+        padding: 0.75rem 0.9rem 0.25rem 0.9rem;
+        margin-bottom: 1.4rem;
+    }
+
+    [data-testid="stSegmentedControl"] {
+        margin-bottom: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 df_data = load_data()
 df_bess_data = load_bess_data()
 

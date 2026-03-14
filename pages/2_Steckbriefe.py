@@ -31,9 +31,52 @@ st.set_page_config(page_title="Steckbriefe", page_icon="V", layout="wide")
 st.markdown(
     """
     <style>
+    .block-container {
+        padding-top: 2.25rem;
+        padding-bottom: 4rem;
+    }
+
+    h1, h2, h3 {
+        margin-top: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
     div.stButton > button {
         height: 72px;
         white-space: normal;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(22, 27, 38, 0.78);
+    }
+
+    div.stButton > button:hover {
+        border-color: rgba(96, 165, 250, 0.65);
+        background: rgba(30, 41, 59, 0.95);
+    }
+
+    [data-testid="stMetric"] {
+        background: rgba(22, 27, 38, 0.82);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    [data-testid="stMetricLabel"] {
+        padding-bottom: 0.25rem;
+    }
+
+    [data-testid="stVerticalBlock"] > [data-testid="element-container"]:has([data-testid="stVegaLiteChart"]) {
+        background: rgba(15, 23, 42, 0.52);
+        border: 1px solid rgba(148, 163, 184, 0.14);
+        border-radius: 20px;
+        padding: 0.75rem 0.9rem 0.25rem 0.9rem;
+        margin-bottom: 1.4rem;
+    }
+
+    [data-testid="stSelectbox"] {
+        margin-top: 0.8rem;
+        margin-bottom: 1.35rem;
     }
     </style>
     """,
