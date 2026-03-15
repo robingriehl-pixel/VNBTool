@@ -408,6 +408,113 @@ for level in ("NS", "MS", "HS"):
         f"{storage_request_by_level[level]['duration']:,.0f} Tage",
     )
 
+st.markdown("#### NS / MS / HS Profil")
+st.caption("Erhebung Stand 2024")
+
+profile_configs = [
+    (
+        "Stromkreislänge",
+        {
+            "NS": pd.to_numeric(pd.Series([record.get("length_ns", 0)]), errors="coerce").fillna(0).iloc[0],
+            "MS": pd.to_numeric(pd.Series([record.get("length_ms", 0)]), errors="coerce").fillna(0).iloc[0],
+            "HS": pd.to_numeric(pd.Series([record.get("length_hs", 0)]), errors="coerce").fillna(0).iloc[0],
+        },
+        "km",
+    ),
+    (
+        "Count Storage Requests",
+        {
+            "NS": storage_request_by_level["NS"]["count"],
+            "MS": storage_request_by_level["MS"]["count"],
+            "HS": storage_request_by_level["HS"]["count"],
+        },
+        "",
+    ),
+    (
+        "Sum Storage Requests",
+        {
+            "NS": storage_request_by_level["NS"]["sum"],
+            "MS": storage_request_by_level["MS"]["sum"],
+            "HS": storage_request_by_level["HS"]["sum"],
+        },
+        "kW",
+    ),
+    (
+        "Duration Storage",
+        {
+            "NS": storage_request_by_level["NS"]["duration"],
+            "MS": storage_request_by_level["MS"]["duration"],
+            "HS": storage_request_by_level["HS"]["duration"],
+        },
+        "Tage",
+    ),
+]
+
+profile_color_scale = alt.Scale(
+    domain=["NS", "MS", "HS"],
+    range=["#2563eb", "#f59e0b", "#dc2626"],
+)
+
+for label, value_map, unit in profile_configs:
+    display_label = f"{label} ({unit})" if unit else label
+    profile_metric_df = pd.DataFrame(
+        {
+            "level": ["NS", "MS", "HS"],
+            "value": [value_map["NS"], value_map["MS"], value_map["HS"]],
+            "y": [0, 0, 0],
+        }
+    )
+    max_value = max(profile_metric_df["value"].max(), 1)
+    axis_padding = max_value * 0.04
+    if max_value <= 100:
+        axis_padding = max(axis_padding, 4)
+    elif max_value <= 1000:
+        axis_padding = max(axis_padding, 20)
+    else:
+        axis_padding = max(axis_padding, max_value * 0.03)
+    x_domain = [0, max_value + axis_padding]
+    baseline_df = pd.DataFrame({"x_start": [0], "x_end": [max_value], "y": [0]})
+
+    st.markdown(f"**{display_label}**")
+
+    profile_line = (
+        alt.Chart(baseline_df)
+        .mark_rule(strokeWidth=3, color="#6b7280")
+        .encode(
+            x=alt.X("x_start:Q", scale=alt.Scale(domain=x_domain), title=display_label),
+            x2="x_end:Q",
+            y=alt.Y("y:Q", axis=None),
+        )
+    )
+
+    profile_points = (
+        alt.Chart(profile_metric_df)
+        .mark_circle(size=220, opacity=0.9)
+        .encode(
+            x=alt.X("value:Q", scale=alt.Scale(domain=x_domain), title=display_label),
+            y=alt.Y("y:Q", axis=None),
+            color=alt.Color("level:N", title="Ebene", scale=profile_color_scale),
+            tooltip=[
+                alt.Tooltip("level:N", title="Ebene"),
+                alt.Tooltip("value:Q", title=display_label, format=",.2f"),
+            ],
+        )
+        .properties(height=110)
+    )
+
+    profile_labels = (
+        alt.Chart(profile_metric_df)
+        .mark_text(dy=-18, fontSize=12, fontWeight="bold")
+        .encode(
+            x=alt.X("value:Q", scale=alt.Scale(domain=x_domain)),
+            y=alt.Y("y:Q", axis=None),
+            text="level:N",
+            color=alt.Color("level:N", scale=profile_color_scale, legend=None),
+        )
+    )
+
+    st.altair_chart(profile_line + profile_points + profile_labels, use_container_width=True)
+
 base_line = pd.DataFrame({"x_start": [0.0], "x_end": [1.0], "y": [0]})
 digital_score_configs = [
     ("Digital Score gesamt", "digital_score_total"),
@@ -418,6 +525,9 @@ digital_score_configs = [
 ]
 
 st.markdown("#### Einordnung der Digital Scores")
+st.caption("Erhebung Stand 2024")
+
+digital_x_domain = [0, 1.03]
 
 for label, score_col in digital_score_configs:
     if score_col not in df_data.columns:
@@ -439,7 +549,7 @@ for label, score_col in digital_score_configs:
         alt.Chart(base_line)
         .mark_rule(strokeWidth=3, color="#6b7280")
         .encode(
-            x=alt.X("x_start:Q", scale=alt.Scale(domain=[0, 1]), title=label),
+            x=alt.X("x_start:Q", scale=alt.Scale(domain=digital_x_domain), title=label),
             x2="x_end:Q",
             y=alt.Y("y:Q", axis=None),
         )
@@ -451,7 +561,7 @@ for label, score_col in digital_score_configs:
         .encode(
             x=alt.X(
                 f"{score_col}:Q",
-                scale=alt.Scale(domain=[0, 1]),
+                scale=alt.Scale(domain=digital_x_domain),
                 axis=alt.Axis(values=[0, 0.25, 0.5, 0.75, 1.0], format=".2f"),
                 title=label,
             ),
@@ -467,7 +577,7 @@ for label, score_col in digital_score_configs:
         alt.Chart(score_df.loc[score_df["selected"]])
         .mark_circle(size=420, color="#1f77b4", stroke="white", strokeWidth=2)
         .encode(
-            x=alt.X(f"{score_col}:Q", scale=alt.Scale(domain=[0, 1])),
+            x=alt.X(f"{score_col}:Q", scale=alt.Scale(domain=digital_x_domain)),
             y=alt.Y("y:Q", axis=None),
             tooltip=[
                 alt.Tooltip(f"{name_col}:N", title="VNB"),
@@ -477,6 +587,6 @@ for label, score_col in digital_score_configs:
     )
 
     st.altair_chart(
-        (line + all_points + selected_point).properties(height=90),
+        (line + all_points + selected_point).properties(height=100),
         use_container_width=True,
     )
