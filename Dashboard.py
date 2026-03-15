@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "output" / "df_data.csv"
 BESS_DATA_PATH = BASE_DIR / "output" / "df_bess_data.csv"
 OVERVIEW_DATA_PATH = BASE_DIR / "output" / "df_overview.csv"
-RAW_BESS_INPUT_PATH = BASE_DIR / "input" / "mstr_bess_50KW_betrieb.csv"
+RAW_BESS_INPUT_PATH = BASE_DIR / "input" / "mstr_bess_50kW_all.csv"
 
 
 @st.cache_data
@@ -173,9 +173,22 @@ df_bess_data = load_bess_data()
 df_overview = load_overview_data()
 df_bess_raw = load_raw_bess_input()
 
+if "betriebsstatus" in df_bess_data.columns:
+    df_bess_data_active = df_bess_data[
+        df_bess_data["betriebsstatus"].astype(str).str.strip().eq("In Betrieb")
+    ].copy()
+else:
+    df_bess_data_active = df_bess_data.copy()
+
+if "Betriebs-Status" in df_bess_raw.columns:
+    df_bess_raw_active = df_bess_raw[
+        df_bess_raw["Betriebs-Status"].astype(str).str.strip().eq("In Betrieb")
+    ].copy()
+else:
+    df_bess_raw_active = df_bess_raw.copy()
+
 st.title("Voltpark VNB Tool")
-st.subheader("VNB Dashboard")
-st.caption("Uebersicht ueber alle geladenen VNB-Daten")
+st.markdown("<div style='height: 1.1rem;'></div>", unsafe_allow_html=True)
 
 if df_data.empty:
     st.warning("Keine Daten in 'output/df_data.csv' gefunden.")
@@ -183,7 +196,7 @@ if df_data.empty:
 
 if not df_overview.empty:
     st.markdown("---")
-    st.header("Prognosen fuer Regionalszenarien")
+    st.header("Prognosen für Regionalszenarien")
 
     valid_regions = ["Nord", "Ost", "Mitte", "West", "Südwest", "Bayern"]
 
@@ -313,7 +326,7 @@ if not df_overview.empty:
             "Nord" if "Nord" in mix_region_options else mix_region_options[0]
         )
 
-    st.caption("Planungsregion fuer Technologiemix")
+    st.caption("Planungsregion für Technologiemix")
     for idx, region_name in enumerate(mix_region_options):
         if idx % 3 == 0:
             mix_region_cols = st.columns(3)
@@ -528,11 +541,11 @@ if not df_overview.empty:
 
     st.altair_chart(overview_bess_chart, use_container_width=True)
 
-    if not df_bess_data.empty:
-        st.subheader("Groesste BESS-Einheiten")
+    if not df_bess_data_active.empty:
+        st.subheader("Größte BESS-Einheiten")
 
-        if not df_bess_raw.empty:
-            top_bess_units = df_bess_raw[
+        if not df_bess_raw_active.empty:
+            top_bess_units = df_bess_raw_active[
                 [
                     "MaStR-Nr. des Anschluss-Netzbetreibers",
                     "Name des Anschluss-Netzbetreibers",
@@ -552,10 +565,11 @@ if not df_overview.empty:
                 }
             ).copy()
         else:
-            top_bess_units = df_bess_data[
+            top_bess_units = df_bess_data_active[
                 [
                     "keys",
                     "netzbetreiber_name",
+                    "betriebsstatus",
                     "bruttoleistung_einheit",
                     "inbetriebnahme_datum",
                 ]
@@ -639,7 +653,7 @@ if not df_overview.empty:
                         unsafe_allow_html=True,
                     )
 
-st.subheader("Uebersicht nach Spannungsebene")
+st.subheader("Übersicht nach Spannungsebene")
 
 level_summary = {
     "NS": {
@@ -669,9 +683,9 @@ for column, level in zip((col_ns, col_ms, col_hs), ("NS", "MS", "HS")):
     with column:
         st.markdown(f"### {level}")
         st.metric("VNB", vnb_count)
-        st.metric("Stromkreislaenge", f"{total_length:,.0f} km")
+        st.metric("Stromkreislänge", f"{total_length:,.0f} km")
 
-st.subheader("Top 20 VNB nach Stromkreislaenge")
+st.subheader("Top 20 VNB nach Stromkreislänge")
 st.caption("Erhebung Stand 2024")
 
 length_options = {
@@ -702,7 +716,7 @@ chart = (
     alt.Chart(top_length_df)
     .mark_bar()
     .encode(
-        x=alt.X(f"{length_col}:Q", title=f"Stromkreislaenge {selected_level}"),
+        x=alt.X(f"{length_col}:Q", title=f"Stromkreislänge {selected_level}"),
         y=alt.Y(
             "vnb_names:N",
             sort=alt.EncodingSortField(field=length_col, order="descending"),
@@ -712,7 +726,7 @@ chart = (
             alt.Tooltip("vnb_names:N", title="VNB"),
             alt.Tooltip(
                 f"{length_col}:Q",
-                title=f"Stromkreislaenge {selected_level}",
+                title=f"Stromkreislänge {selected_level}",
                 format=",.2f",
             ),
         ],
@@ -783,11 +797,11 @@ storage_chart = (
 
 st.altair_chart(storage_chart, use_container_width=True)
 
-if not df_bess_data.empty and "MSTR_key" in df_data.columns:
+if not df_bess_data_active.empty and "MSTR_key" in df_data.columns:
     st.subheader("Top 20 VNB nach BESS-Bruttoleistung")
-    st.caption("Erhebung Stand 2024")
+    st.caption("Marktstammdatenregister, Anlagen über 50 kW, Stand März 2026")
 
-    bess_chart_df = df_bess_data[["keys", "bruttoleistung_einheit"]].copy()
+    bess_chart_df = df_bess_data_active[["keys", "bruttoleistung_einheit"]].copy()
     bess_chart_df["bruttoleistung_einheit"] = (
         bess_chart_df["bruttoleistung_einheit"]
         .astype(str)
@@ -920,7 +934,7 @@ duration_chart = (
 
 st.altair_chart(duration_chart, use_container_width=True)
 
-st.subheader("Netzlaenge, Flaeche und Speicher-Anschlussbegehren")
+st.subheader("Netzlänge, Fläche und Speicher-Anschlussbegehren")
 st.caption("Erhebung Stand 2024")
 
 bubble_options = {
@@ -962,8 +976,8 @@ bubble_chart = (
     alt.Chart(bubble_df)
     .mark_circle(opacity=0.7)
     .encode(
-        x=alt.X(f"{length_bubble_col}:Q", title=f"Stromkreislaenge {selected_bubble_level}"),
-        y=alt.Y(f"{area_bubble_col}:Q", title=f"Flaeche {selected_bubble_level}"),
+        x=alt.X(f"{length_bubble_col}:Q", title=f"Stromkreislänge {selected_bubble_level}"),
+        y=alt.Y(f"{area_bubble_col}:Q", title=f"Fläche {selected_bubble_level}"),
         size=alt.Size(
             f"{size_bubble_col}:Q",
             title=f"Summenleistung Speicher {selected_bubble_level}",
@@ -973,12 +987,12 @@ bubble_chart = (
             alt.Tooltip("vnb_names:N", title="VNB"),
             alt.Tooltip(
                 f"{length_bubble_col}:Q",
-                title=f"Stromkreislaenge {selected_bubble_level}",
+                title=f"Stromkreislänge {selected_bubble_level}",
                 format=",.2f",
             ),
             alt.Tooltip(
                 f"{area_bubble_col}:Q",
-                title=f"Flaeche {selected_bubble_level}",
+                title=f"Fläche {selected_bubble_level}",
                 format=",.2f",
             ),
             alt.Tooltip(
@@ -993,7 +1007,7 @@ bubble_chart = (
 
 st.altair_chart(bubble_chart, use_container_width=True)
 
-st.subheader("Stromkreislaenge vs. Summenleistung Speicher-Anschlussbegehren")
+st.subheader("Stromkreislänge vs. Summenleistung Speicher-Anschlussbegehren")
 st.caption("Erhebung Stand 2024")
 
 scatter_storage_options = {
@@ -1003,7 +1017,7 @@ scatter_storage_options = {
 }
 
 selected_scatter_storage_level = st.segmented_control(
-    "Spannungsebene Scatter Stromkreislaenge / Speicher",
+    "Spannungsebene Scatter Stromkreislänge / Speicher",
     options=list(scatter_storage_options.keys()),
     default="NS",
     key="scatter_storage_level",
@@ -1036,7 +1050,7 @@ scatter_storage_chart = (
     .encode(
         x=alt.X(
             f"{scatter_length_col}:Q",
-            title=f"Stromkreislaenge {selected_scatter_storage_level} (km)",
+            title=f"Stromkreislänge {selected_scatter_storage_level} (km)",
         ),
         y=alt.Y(
             f"{scatter_count_col}:Q",
@@ -1051,7 +1065,7 @@ scatter_storage_chart = (
             alt.Tooltip("vnb_names:N", title="VNB"),
             alt.Tooltip(
                 f"{scatter_length_col}:Q",
-                title=f"Stromkreislaenge {selected_scatter_storage_level}",
+                title=f"Stromkreislänge {selected_scatter_storage_level}",
                 format=",.0f",
             ),
             alt.Tooltip(

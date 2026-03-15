@@ -93,9 +93,15 @@ st.markdown(
 df_data = load_data()
 df_bess_data = load_bess_data()
 
+if "betriebsstatus" in df_bess_data.columns:
+    df_bess_data_active = df_bess_data[
+        df_bess_data["betriebsstatus"].astype(str).str.strip().eq("In Betrieb")
+    ].copy()
+else:
+    df_bess_data_active = df_bess_data.copy()
+
 st.title("Voltpark VNB Tool")
-st.subheader("Steckbriefe")
-st.caption("Einzelansicht fuer einen ausgewaehlten VNB")
+st.markdown("<div style='height: 1.1rem;'></div>", unsafe_allow_html=True)
 
 if df_data.empty:
     st.warning("Keine Daten in 'output/df_data.csv' gefunden.")
@@ -134,7 +140,7 @@ top_vnb_names = (
 if "selected_vnb_name" not in st.session_state:
     st.session_state.selected_vnb_name = top_vnb_names[0] if top_vnb_names else options[name_col].iloc[0]
 
-st.subheader("Groesste VNB")
+st.subheader("Größte VNB")
 for idx, vnb_name in enumerate(top_vnb_names):
     if idx % 4 == 0:
         top_cols = st.columns(4)
@@ -210,9 +216,11 @@ total_storage_request_sum = sum(
 )
 
 bess_brutto_by_level = {"NS": 0.0, "MS": 0.0, "HS": 0.0}
-bess_timeline_df = pd.DataFrame(columns=["inbetriebnahme_datum", "cumulative_bruttoleistung"])
-if not df_bess_data.empty and record.get("MSTR_key") is not None:
-    bess_vnb_df = df_bess_data.loc[df_bess_data["keys"] == record.get("MSTR_key")].copy()
+bess_timeline_df = pd.DataFrame(columns=["datum", "cumulative_bruttoleistung", "serie"])
+if not df_bess_data_active.empty and record.get("MSTR_key") is not None:
+    bess_vnb_df = df_bess_data_active.loc[
+        df_bess_data_active["keys"] == record.get("MSTR_key")
+    ].copy()
     if not bess_vnb_df.empty:
         bess_vnb_df["bruttoleistung_einheit"] = (
             bess_vnb_df["bruttoleistung_einheit"]
@@ -237,15 +245,72 @@ if not df_bess_data.empty and record.get("MSTR_key") is not None:
             format="%d.%m.%Y",
             errors="coerce",
         )
-        bess_timeline_df = (
+        bess_timeline_inbetrieb = (
             bess_vnb_df.dropna(subset=["inbetriebnahme_datum", "bruttoleistung_einheit"])
-            .loc[lambda frame: frame["inbetriebnahme_datum"] >= pd.Timestamp("2006-01-01")]
+            .loc[lambda frame: frame["inbetriebnahme_datum"] >= pd.Timestamp("2010-01-01")]
             .sort_values("inbetriebnahme_datum")
             .groupby("inbetriebnahme_datum", as_index=False)["bruttoleistung_einheit"]
             .sum()
         )
-        bess_timeline_df["cumulative_bruttoleistung"] = (
-            bess_timeline_df["bruttoleistung_einheit"].cumsum()
+        bess_timeline_inbetrieb["cumulative_bruttoleistung"] = (
+            bess_timeline_inbetrieb["bruttoleistung_einheit"].cumsum()
+        )
+        bess_timeline_inbetrieb["datum"] = bess_timeline_inbetrieb["inbetriebnahme_datum"]
+        bess_timeline_inbetrieb["serie"] = "In Betrieb"
+        bess_timeline_df = pd.concat(
+            [
+                bess_timeline_df,
+                bess_timeline_inbetrieb[["datum", "cumulative_bruttoleistung", "serie"]],
+            ],
+            ignore_index=True,
+        )
+
+if (
+    not df_bess_data.empty
+    and record.get("MSTR_key") is not None
+    and "registrierungsdatum" in df_bess_data.columns
+):
+    bess_vnb_plan_df = df_bess_data.loc[
+        df_bess_data["keys"] == record.get("MSTR_key")
+    ].copy()
+    if "betriebsstatus" in bess_vnb_plan_df.columns:
+        bess_vnb_plan_df = bess_vnb_plan_df[
+            bess_vnb_plan_df["betriebsstatus"].astype(str).str.strip().eq("In Planung")
+        ].copy()
+
+    if not bess_vnb_plan_df.empty:
+        bess_vnb_plan_df["bruttoleistung_einheit"] = (
+            bess_vnb_plan_df["bruttoleistung_einheit"]
+            .astype(str)
+            .str.replace(".", "", regex=False)
+            .str.replace(",", ".", regex=False)
+        )
+        bess_vnb_plan_df["bruttoleistung_einheit"] = pd.to_numeric(
+            bess_vnb_plan_df["bruttoleistung_einheit"], errors="coerce"
+        )
+        bess_vnb_plan_df["registrierungsdatum"] = pd.to_datetime(
+            bess_vnb_plan_df["registrierungsdatum"],
+            format="%d.%m.%Y",
+            errors="coerce",
+        )
+        bess_timeline_plan = (
+            bess_vnb_plan_df.dropna(subset=["registrierungsdatum", "bruttoleistung_einheit"])
+            .loc[lambda frame: frame["registrierungsdatum"] >= pd.Timestamp("2010-01-01")]
+            .sort_values("registrierungsdatum")
+            .groupby("registrierungsdatum", as_index=False)["bruttoleistung_einheit"]
+            .sum()
+        )
+        bess_timeline_plan["cumulative_bruttoleistung"] = (
+            bess_timeline_plan["bruttoleistung_einheit"].cumsum()
+        )
+        bess_timeline_plan["datum"] = bess_timeline_plan["registrierungsdatum"]
+        bess_timeline_plan["serie"] = "In Planung"
+        bess_timeline_df = pd.concat(
+            [
+                bess_timeline_df,
+                bess_timeline_plan[["datum", "cumulative_bruttoleistung", "serie"]],
+            ],
+            ignore_index=True,
         )
 
 st.markdown("---")
@@ -259,7 +324,7 @@ with header_right:
 
 metric_col1, metric_col2, metric_col3 = st.columns(3)
 metric_col1.metric("Spannungsebenen", record.get("vnb_vlevels", ""))
-metric_col2.metric("Stromkreislaenge gesamt", f"{total_length:,.0f} km")
+metric_col2.metric("Stromkreislänge gesamt", f"{total_length:,.0f} km")
 metric_col3.metric("Storage Requests gesamt", f"{total_storage_request_sum:,.0f} kW")
 
 st.markdown("#### BESS Bruttoleistung")
@@ -273,14 +338,14 @@ bess_col3.metric("HS", f"{bess_brutto_by_level['HS']:,.0f} kW")
 if not bess_timeline_df.empty:
     bess_timeline_chart = (
         alt.Chart(bess_timeline_df)
-        .mark_line(point=True)
+        .mark_line(point=True, strokeWidth=3)
         .encode(
             x=alt.X(
-                "inbetriebnahme_datum:T",
-                title="Inbetriebnahmedatum",
+                "datum:T",
+                title="Datum",
                 scale=alt.Scale(
                     domain=[
-                        pd.Timestamp("2006-01-01"),
+                        pd.Timestamp("2010-01-01"),
                         pd.Timestamp.today().normalize(),
                     ]
                 ),
@@ -290,8 +355,17 @@ if not bess_timeline_df.empty:
                 "cumulative_bruttoleistung:Q",
                 title="Kumulierte BESS-Bruttoleistung (kW)",
             ),
+            color=alt.Color(
+                "serie:N",
+                title="Serie",
+                scale=alt.Scale(
+                    domain=["In Betrieb", "In Planung"],
+                    range=["#2563eb", "#dc2626"],
+                ),
+            ),
             tooltip=[
-                alt.Tooltip("inbetriebnahme_datum:T", title="Datum"),
+                alt.Tooltip("serie:N", title="Serie"),
+                alt.Tooltip("datum:T", title="Datum"),
                 alt.Tooltip(
                     "cumulative_bruttoleistung:Q",
                     title="Kumulierte Bruttoleistung",
@@ -299,7 +373,7 @@ if not bess_timeline_df.empty:
                 ),
             ],
         )
-        .properties(height=260)
+        .properties(height=335)
     )
 
     st.altair_chart(bess_timeline_chart, use_container_width=True)
