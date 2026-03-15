@@ -73,6 +73,11 @@ st.markdown(
 
     [data-testid="stMetricLabel"] {
         padding-bottom: 0.25rem;
+        color: #cbd5e1;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #f8fafc;
     }
 
     [data-testid="stVerticalBlock"] > [data-testid="element-container"]:has([data-testid="stVegaLiteChart"]) {
@@ -203,6 +208,7 @@ if not df_overview.empty:
     year_lookup = {column: year for year, column in overview_year_cols.items()}
 
     st.subheader("Technologievergleich innerhalb einer Planungsregion")
+    st.caption("Regionalszenarien der VNB 2025")
 
     region_options = (
         df_overview_clean["Planungsregion"]
@@ -298,6 +304,7 @@ if not df_overview.empty:
         st.altair_chart(region_compare_chart, use_container_width=True)
 
     st.subheader("Technologiemix innerhalb einer Planungsregion")
+    st.caption("Regionalszenarien der VNB 2025")
 
     mix_region_options = region_options
 
@@ -411,6 +418,7 @@ if not df_overview.empty:
         st.altair_chart(mix_chart, use_container_width=True)
 
     st.subheader("Erneuerbare Erzeugung nach Planungsregion")
+    st.caption("Regionalszenarien der VNB 2025")
 
     generation_df = df_overview_clean[
         ["Planungsregion", "Anlagenart", *overview_year_cols.values()]
@@ -474,6 +482,7 @@ if not df_overview.empty:
         st.altair_chart(generation_chart, use_container_width=True)
 
     st.subheader("Batteriespeicher nach Planungsregion")
+    st.caption("Regionalszenarien der VNB 2025")
 
     overview_bess_df = df_overview_clean.loc[
         df_overview_clean["Anlagenart"].astype(str).str.contains(
@@ -663,6 +672,7 @@ for column, level in zip((col_ns, col_ms, col_hs), ("NS", "MS", "HS")):
         st.metric("Stromkreislaenge", f"{total_length:,.0f} km")
 
 st.subheader("Top 20 VNB nach Stromkreislaenge")
+st.caption("Erhebung Stand 2024")
 
 length_options = {
     "NS": "length_ns",
@@ -713,6 +723,7 @@ chart = (
 st.altair_chart(chart, use_container_width=True)
 
 st.subheader("Top 20 VNB nach Summenleistung der Speicher-Anschlussbegehren")
+st.caption("Erhebung Stand 2024")
 
 storage_sum_options = {
     "NS": "sum_storage_requests_ns",
@@ -774,6 +785,7 @@ st.altair_chart(storage_chart, use_container_width=True)
 
 if not df_bess_data.empty and "MSTR_key" in df_data.columns:
     st.subheader("Top 20 VNB nach BESS-Bruttoleistung")
+    st.caption("Erhebung Stand 2024")
 
     bess_chart_df = df_bess_data[["keys", "bruttoleistung_einheit"]].copy()
     bess_chart_df["bruttoleistung_einheit"] = (
@@ -829,6 +841,7 @@ if not df_bess_data.empty and "MSTR_key" in df_data.columns:
     st.altair_chart(bess_chart, use_container_width=True)
 
 st.subheader("Top 20 VNB nach Anschlussdauer Speicher mit Vergleich zu EE")
+st.caption("Erhebung Stand 2024")
 
 duration_options = {
     "NS": ("duration_storage_ns", "duration_ee_ns"),
@@ -908,6 +921,7 @@ duration_chart = (
 st.altair_chart(duration_chart, use_container_width=True)
 
 st.subheader("Netzlaenge, Flaeche und Speicher-Anschlussbegehren")
+st.caption("Erhebung Stand 2024")
 
 bubble_options = {
     "NS": ("length_ns", "area_ns", "sum_storage_requests_ns"),
@@ -980,6 +994,7 @@ bubble_chart = (
 st.altair_chart(bubble_chart, use_container_width=True)
 
 st.subheader("Stromkreislaenge vs. Summenleistung Speicher-Anschlussbegehren")
+st.caption("Erhebung Stand 2024")
 
 scatter_storage_options = {
     "NS": ("length_ns", "count_storage_requests_ns", "sum_storage_requests_ns"),

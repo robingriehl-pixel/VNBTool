@@ -47,6 +47,8 @@ st.markdown(
         border-radius: 16px;
         border: 1px solid rgba(148, 163, 184, 0.22);
         background: rgba(22, 27, 38, 0.78);
+        color: #e5e7eb;
+        font-weight: 600;
     }
 
     div.stButton > button:hover {
@@ -64,6 +66,11 @@ st.markdown(
 
     [data-testid="stMetricLabel"] {
         padding-bottom: 0.25rem;
+        color: #cbd5e1;
+    }
+
+    [data-testid="stMetricValue"] {
+        color: #f8fafc;
     }
 
     [data-testid="stVerticalBlock"] > [data-testid="element-container"]:has([data-testid="stVegaLiteChart"]) {
@@ -256,6 +263,7 @@ metric_col2.metric("Stromkreislaenge gesamt", f"{total_length:,.0f} km")
 metric_col3.metric("Storage Requests gesamt", f"{total_storage_request_sum:,.0f} kW")
 
 st.markdown("#### BESS Bruttoleistung")
+st.caption("Nur Batteriespeicher ab 50kW")
 
 bess_col1, bess_col2, bess_col3 = st.columns(3)
 bess_col1.metric("NS", f"{bess_brutto_by_level['NS']:,.0f} kW")
