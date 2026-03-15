@@ -26,6 +26,17 @@ def load_bess_data() -> pd.DataFrame:
     return pd.read_csv(BESS_DATA_PATH, sep=";", encoding="utf-8-sig")
 
 
+def read_csv_with_mtime(path: Path) -> pd.DataFrame:
+    if not path.exists():
+        return pd.DataFrame()
+    return _read_csv_with_mtime(path, path.stat().st_mtime)
+
+
+@st.cache_data
+def _read_csv_with_mtime(path: Path, _mtime: float) -> pd.DataFrame:
+    return pd.read_csv(path, sep=";", encoding="utf-8-sig")
+
+
 st.set_page_config(page_title="Steckbriefe", page_icon="V", layout="wide")
 
 st.markdown(
@@ -90,8 +101,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-df_data = load_data()
-df_bess_data = load_bess_data()
+df_data = read_csv_with_mtime(DATA_PATH)
+df_bess_data = read_csv_with_mtime(BESS_DATA_PATH)
 
 if "betriebsstatus" in df_bess_data.columns:
     df_bess_data_active = df_bess_data[
