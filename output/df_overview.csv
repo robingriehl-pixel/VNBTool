@@ -1,0 +1,111 @@
+﻿Planungsregion;Anlagenart;Verteilnetzbetreiber_Bestand_2024.0;Verteilnetzbetreiber_Prognosen_2030.0;Verteilnetzbetreiber_Prognosen_2035.0;Verteilnetzbetreiber_Prognosen_2045.0;Verteilnetzbetreiber_Anmerkungen_2045.0;Übertragungsnetzbetreiber_Szenario A_2037.0;Übertragungsnetzbetreiber_Szenario A_2045.0;Übertragungsnetzbetreiber_Szenario B_2037.0;Übertragungsnetzbetreiber_Szenario B_2045.0;Übertragungsnetzbetreiber_Anmerkungen_2045.0
+Nord;Photovoltaik auf oder an Gebäuden (MWp);2047.0;4527.0;6360.0;8972.0;;5170.239999999995;6110.680000000004;6670.800000000001;7805.109999999988;
+Nord;Photovoltaik Freifläche (MWp);1430.0;4704.0;7715.0;10034.0;Siehe Regionalszenario, Kapitel 4.5.2.;8270.860000000011;9824.029999999984;10873.049999999996;12755.860000000008;
+Nord;Windenergie an Land;8582.0;13821.0;15840.0;18894.0;;15213.289999999999;15385.11;15536.490000000002;15556.710000000001;
+Nord;Windenergie auf See;0.0;0.0;0.0;0.0;Anschluss im Übertragungsnetz.;15977.6;16390.6;15977.6;16390.6;
+Nord;Sonstige erneuerbare Erzeugung;585.0;602.0;602.0;600.0;;327.90999999999997;197.3;327.90999999999997;197.3;Umfasst Laufwasser- und Biomassekraftwerke.
+Nord;Konventionelle Kraftwerke;1345.0;1600.0;1410.0;1249.0;Siehe Regionalszenario, Kapitel 5.4.;448.87;766.86;645.8399999999999;1467.5400000000002;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+Nord;Wärmepumpen (für dezentrale Wärmelösungen);140.0;2937.0;4868.0;8731.0;;1940.5199999999998;2898.1000000000004;2126.23;3198.6899999999996;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+Nord;Elektrischer Bedarf für zentrale Wärmelösungen;181.0;478.0;852.0;1549.0;;424.6400000000011;714.7499999999993;1088.2999999999943;995.1499999999965;
+Nord;Elektromobilität;509.0;6204.0;8644.0;12989.0;;9890.210000000001;11487.560000000001;12161.099999999999;13739.859999999999;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+Nord;Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);3951.0;4849.0;4827.0;4606.0;Siehe Regionalszenario, Kapitel 4.6.;2957.27;2854.2099999999996;2941.7099999999996;2872.36;Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne Übertragungsnetzverluste.
+Nord;Stand-alone Rechenzentren;0.0;535.0;535.0;535.0;Siehe Regionalszenario, Kapitel 5.2.2.;400.0;400.0;600.0;600.0;Umfasst neu hinzukommende Rechenzentren.
+Nord;Elektrolyseure;5.0;175.0;195.0;195.0;Siehe Regionalszenario, Kapitel 5.2.1.;1271.71;3142.0;6457.840000000017;11737.839999999998;Ohne Elektrolyse auf See. Regionalisierung vorläufig.
+Nord;Kleinbatteriespeicher (< 1 MW);328.0;1106.0;1884.0;3008.0;;2043.9999999999982;2837.49;2675.129999999998;3526.299999999999;
+Nord;Großbatteriespeicher (ab 1 MW);47.0;2700.0;3300.0;3300.0;;1913.85;1913.85;3862.6499999999996;3862.5;
+Nord;Pumpspeicher;120.0;120.0;120.0;120.0;;117.89999999999999;117.89999999999999;117.89999999999999;117.89999999999999;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+Ost;Photovoltaik auf oder an Gebäuden (MWp);10266.0;21290.0;31220.0;46950.0;;27187.66999999996;32441.539999999946;35398.479999999996;41784.39000000003;
+Ost;Photovoltaik Freifläche (MWp);12223.0;52470.0;75800.0;100980.0;;39817.78999999995;47092.180000000015;52005.8000000001;60830.419999999984;
+Ost;Windenergie an Land;20169.0;35800.0;47380.0;56060.0;;40108.759999999995;48068.649999999994;54939.05;55697.429999999964;
+Ost;Windenergie auf See;0.0;0.0;0.0;0.0;;4032.0;4950.0;4032.0;5695.0;
+Ost;Sonstige erneuerbare Erzeugung;2191.0;2040.0;1980.0;1520.0;Umfasst Biomasse-, Klärgas- und Wasserkraftwerke.;1358.6500000000003;880.2499999999998;1358.6500000000003;880.2499999999998;Umfasst Laufwasser- und Biomassekraftwerke.
+Ost;Konventionelle Kraftwerke;8529.0;9130.0;9650.0;8740.0;Enthält Kraft-Wärme-Kopplung und Blockheizkraftkraftwerke.;8435.12;11480.730000000001;11546.430000000008;16006.940000000002;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+Ost;Wärmepumpen (für dezentrale Wärmelösungen);879.0;4060.0;6510.0;13890.0;"Dezentrale Wärmepumpen und Nahwärme. Der Bestand ist abgeschätzt und in ""Konventionelle Last"" integriert.";10669.85;15331.09;12321.36;18117.14;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+Ost;Elektrischer Bedarf für zentrale Wärmelösungen;342.0;4880.0;6590.0;11840.0;Power-to-Heat, Großwärme für Fernwärmenetze.;3986.95999999998;6198.589999999984;10303.280000000002;9481.189999999999;
+Ost;Elektromobilität;2529.0;17480.0;30120.0;41620.0;"Der Bestand ist abgeschätzt und in ""Konventionelle Last"" integriert.";43597.97;56833.150000000016;57836.28000000001;71044.58;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+Ost;Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);13846.0;12880.0;12160.0;11210.0;Jahreshöchstlasten 2024 der einzelnen Verteilnetzbetreiber (zeitungleich).;13745.479999999996;13540.800000000001;14066.160000000005;13577.46;Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne ÜNB-Netzverluste.
+Ost;Großprojekte (Last);50.0;4540.0;9960.0;11060.0;"Nur Zubau, Der Bestand ist in ""Konventionelle Last"" integriert.";3332.0;3332.0;3943.25;3943.25;Umfasst neu hinzukommende Rechenzentren.
+Ost;Elektrolyseure;29.0;1080.0;6300.0;14300.0;;6671.2300000000005;8588.0;10919.449999999977;14631.949999999977;Ohne Elektrolyse auf See. Regionalisierung vorläufig.
+Ost;Kleinbatteriespeicher (< 1 MW);1563.0;5190.0;8950.0;15040.0;;7926.470000000008;11118.56000000002;10354.990000000007;13859.210000000006;
+Ost;Großbatteriespeicher (ab 1 MW);443.0;2350.0;9800.0;17060.0;;15903.470000000001;15903.470000000001;24227.569999999996;24227.22;
+Ost;Pumpspeicher;340.0;300.0;300.0;300.0;;3005.959999999999;3005.959999999999;3005.959999999999;3005.959999999999;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+Mitte;Photovoltaik auf oder an Gebäuden (MWp);9854.61;16993.386209000004;25040.0;36309.08;Siehe Regionalszenario, Kapitel 4.1.1.;24620.50000000002;28622.77999999999;31300.250000000044;36117.06;
+Mitte;Photovoltaik Freifläche (MWp);1845.2859999999998;7322.38;15112.22;25225.569999999996;Siehe Regionalszenario, Kapitel 4.1.2.;13963.630000000006;17746.83;20304.210000000017;24896.91999999998;
+Mitte;Windenergie an Land;15179.69;24866.24;32516.18;38316.9;Siehe Regionalszenario, Kapitel 4.2.1.;26186.220000000012;29939.33999999998;31632.80000000001;32794.499999999985;
+Mitte;Windenergie auf See;0.0;0.0;0.0;0.0;Anschluss im Übertragungsnetz;19927.0;19500.5;22187.5;25072.4;
+Mitte;Sonstige erneuerbare Erzeugung;1876.042;2041.5950000000003;2002.6550000000004;1932.4150000000002;Siehe Regionalszenario, Kapitel 4.3.1.;1103.16;699.58;1103.16;699.58;Umfasst Laufwasser- und Biomassekraftwerke.
+Mitte;Konventionelle Kraftwerke;3362.467;3130.21;3100.7000000000003;2811.57;Siehe Regionalszenario, Kapitel 4.4.;5546.800000000001;7627.97;7434.610000000002;10835.96;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+Mitte;Wärmepumpen (für dezentrale Wärmelösungen);1003.8489999999998;3679.1199999999994;6318.37;11452.010000000002;Siehe Regionalszenario, Kapitel 5.1.1.;9504.06;14631.870000000003;10792.04;16792.43;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+Mitte;Elektrischer Bedarf für zentrale Wärmelösungen;231.53;1282.87;2433.66;4321.52;Siehe Regionalszenario, Kapitel 5.1.2.;983.6499999999987;1888.4099999999976;2855.379999999989;2981.9399999999882;
+Mitte;Elektromobilität;2515.3239999999996;20960.71;36699.78;51529.310000000005;Siehe Regionalszenario, Kapitel 5.2.;36320.399999999994;44981.17999999999;46187.66999999999;54816.55999999998;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+Mitte;Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);11967.770000000002;12540.971818181813;13239.52;13553.96;Siehe Regionalszenario, Kapitel 5.3.;10008.589999999998;9790.35;10003.77;9683.540000000003;Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne ÜNB-Netzverluste.
+Mitte;Stand-alone Rechenzentren;287.3;2192.1;3773.9;4924.4;Siehe Regionalszenario, Kapitel 5.4.;4576.15;4576.15;4857.9;4857.9;Umfasst neu hinzukommende Rechenzentren.
+Mitte;Elektrolyseure;20.225;251.5;1883.6;4029.54;Siehe Regionalszenario, Kapitel 5.5.;5743.97;10897.0;12036.819999999989;13851.819999999989;Ohne Elektrolyse auf See. Regionalisierung vorläufig.
+Mitte;Kleinbatteriespeicher (< 1 MW);1575.7540000000001;4494.439100957996;8190.715460574796;12375.120957995578;Siehe Regionalszenario, Kapitel 6.1.1.;9137.259999999995;11894.819999999998;11751.110000000002;14655.430000000004;
+Mitte;Großbatteriespeicher (ab 1 MW);139.10399999999998;6514.65;9562.01;13466.68;Siehe Regionalszenario, Kapitel 6.1.2.;5929.5;5929.5;8805.000000000004;8804.77;
+Mitte;Pumpspeicher;0.0;0.0;18.0;32.0;Siehe Regionalszenario, Kapitel 6.2.;816.75;816.75;816.75;816.75;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+West;Photovoltaik auf oder an Gebäuden (MWp);15876.034356482774;30869.381328110718;43554.56996397229;55498.75594486793;;41299.369999999966;47766.63000000026;52182.309999999896;59965.950000000084;
+West;Photovoltaik Freifläche (MWp);2403.5548533384363;8200.03771787671;15931.94012228884;24947.219396440985;;13896.370000000017;16752.350000000068;18681.49999999997;22147.84000000008;
+West;Windenergie an Land;13236.558848031404;23590.054897275462;28358.551259694577;33964.86900838875;;28852.409999999993;30175.83000000002;32920.29999999999;32348.34000000001;
+West;Windenergie auf See;0.0;0.0;0.0;0.0;;10050.0;19354.4;12484.9;23992.0;Die Prognosen der Übertragungsnetzbetreiber für Windenergie auf See wurden den einzelnen Planungsregionen auf Grundlage des Standorts des Netzverknüpfungspunktes an Land zugeordnet. Einige dieser Anschlüsse liegen in der Regelzone Amprions und damit in der Planungsregion West, sind aber ausschließlich Teil des Übertragungsnetzes.
+West;Sonstige erneuerbare Erzeugung;1763.9782000000002;1899.258840978221;1683.9847351558058;1293.3860681559627;;1345.4099999999999;974.4200000000001;1345.4099999999999;974.4200000000001;Umfasst Laufwasser- und Biomassekraftwerke.
+West;Konventionelle Kraftwerke;13575.282203;13328.453011163265;11997.68732272789;10950.62350157143;;23183.41;28795.049999999996;30696.419999999995;34744.619999999995;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+West;Wärmepumpen (für dezentrale Wärmelösungen);1715.2410345299998;5966.307305783855;11047.83493492055;18472.159243949605;;14826.189999999995;22660.910000000003;17617.190000000002;28219.94000000001;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+West;Elektrischer Bedarf für zentrale Wärmelösungen;130.66947999999985;1120.4465803334183;2815.810558108854;4899.076423494278;;2037.7999999999865;3990.469999999977;5562.3999999999705;6978.999999999998;
+West;Elektromobilität;4520.715900000001;30459.730211283317;70606.87025467704;127498.6712458652;;67085.84999999999;81080.19999999998;85176.44999999997;99008.01999999996;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+West;Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);22245.660352996943;24361.00532492379;26482.45794803447;27742.684261320843;;19190.379999999994;18423.649999999994;19004.56999999999;18042.659999999996;Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne ÜNB-Netzverluste.
+West;Stand-alone Rechenzentren;908.6909999999999;3992.2818;9066.40924;16225.688632000001;;6504.7;6504.7;8945.720000000001;8945.720000000001;Umfasst neu hinzukommende Rechenzentren.
+West;Elektrolyseure;18.0;1072.3;2258.2;6272.1;;4256.14;6443.0;8722.640000000009;12352.63999999999;Ohne Elektrolyse auf See. Regionalisierung vorläufig.
+West;Kleinbatteriespeicher (< 1 MW);3195.7930639999986;8688.320619831888;13774.497716999042;19975.161542430786;;13219.36000000001;16698.990000000027;16760.75000000004;20450.480000000007;
+West;Großbatteriespeicher (ab 1 MW);504.35499999999996;4165.57386531083;7825.48264082888;14495.123191864981;;13396.86;13396.86;20759.199999999983;20757.679999999997;
+West;Pumpspeicher;302.0;302.0;302.0;302.0;;297.0;297.0;297.0;297.0;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+Südwest;Photovoltaik auf oder an Gebäuden (MWp);12010.0;16785.34693660817;21866.68110506565;26604.61555911122;;22404.460000000025;24798.270000000008;26767.65999999998;29691.249999999985;
+Südwest;Photovoltaik Freifläche (MWp);2130.0;4261.096858680234;7901.432842221975;10929.670923234615;;9183.120000000003;11260.430000000006;12665.070000000016;15186.129999999977;
+Südwest;Windenergie an Land;2014.0;3859.48153373526;8040.245935313729;9196.945378435666;;8532.24;9452.83;10259.24;10365.830000000002;
+Südwest;Windenergie auf See;0.0;0.0;0.0;0.0;;0.0;0.0;0.0;0.0;
+Südwest;Sonstige erneuerbare Erzeugung;1880.0;1256.461114323903;1066.475471390237;883.726615076306;;1099.31;898.3200000000002;1099.31;898.3200000000002;Umfasst Laufwasser- und Biomassekraftwerke.
+Südwest;Konventionelle Kraftwerke;2132.5829999999996;2047.0;1794.0;1252.0;Entspricht den fossilen thermischen Kraftwerken.;2941.0899999999997;5300.719999999999;3914.329999999999;8028.609999999999;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+Südwest;Wärmepumpen (für dezentrale Wärmelösungen);765.7414;3496.9962660989004;7465.392114096032;12099.64082731201;Leistungsgrenze der Planungsregion Südwest für die Bestandsauswertung: 100 kW.;6996.629999999999;10013.800000000001;7827.879999999999;11975.450000000003;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+Südwest;Elektrischer Bedarf für zentrale Wärmelösungen;74.0901;676.9305578225832;1177.8241137125406;1998.1545122988555;;1007.389999999997;1588.479999999995;2446.4199999999905;2437.989999999991;
+Südwest;Elektromobilität;1906.5;16962.73448797599;36913.04511620877;60990.34156476791;;30686.21;37695.96;38682.81;45601.03;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+Südwest;Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);8030.8597908;10856.857387488442;11295.188718062143;12088.851379209547;Gleichzeitige Leistung. Der Bestandswert 2024 entspricht den gleichzeitigen maximalen Netzbezügen.;8609.990000000002;8408.39;8549.23;8260.52;"Achtung: Werte der konventionellen Last bitte nur in Verbindung mit den Erläuterungen im Textdokument des Regionalszenario 2025 verwenden!
+
+Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne ÜNB-Netzverluste."
+Südwest;Stand-alone Rechenzentren;69.71000000000001;310.87388500130885;830.2851412425275;1097.0;;138.0;138.0;149.9;149.9;Umfasst neu hinzukommende Rechenzentren.
+Südwest;Elektrolyseure;0.0;88.50800555301235;189.2;309.4;;94.5;110.0;938.9599999999996;2258.9599999999996;Ohne Elektrolyse auf See, Regionalisierung vorläufig.
+Südwest;Kleinbatteriespeicher (< 1 MW);1140.66374;3316.020159083889;6449.490407583102;7798.660156741606;;5978.399999999997;6993.4;7432.469999999999;8591.680000000004;
+Südwest;Großbatteriespeicher (ab 1 MW);92.06;1735.9389907241398;3668.580956818998;4626.942122233081;;766.35;766.35;3944.6000000000004;3944.34;
+Südwest;Pumpspeicher;401.0;416.0;430.0;456.0;;2158.2;2158.2;2158.2;2158.2;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+"Bayern
+(Hinweis unten)";Photovoltaik auf oder an Gebäuden (MWp);16603.0;24622.0;31040.0;37602.0;;31825.58999999994;35254.68999999992;37868.62;42109.119999999944;
+"Bayern
+(Hinweis unten)";Photovoltaik Freifläche (MWp);9926.0;22863.0;32137.0;40909.0;;32321.209999999995;37275.07000000002;40620.88999999991;46631.09999999996;
+"Bayern
+(Hinweis unten)";Windenergie an Land;2740.0;10333.0;16279.0;18849.0;;7542.210000000001;10322.720000000001;12750.699999999999;13078.22;
+"Bayern
+(Hinweis unten)";Windenergie auf See;0.0;0.0;0.0;0.0;;0.0;0.0;0.0;0.0;
+"Bayern
+(Hinweis unten)";Sonstige erneuerbare Erzeugung;4788.0;4768.0;4739.0;4632.0;Enthält auch Laufwasser.;3421.0899999999997;3005.6699999999996;3421.0899999999997;3005.6699999999996;Umfasst Laufwasser- und Biomassekraftwerke.
+"Bayern
+(Hinweis unten)";Konventionelle Kraftwerke;6295.0;8858.0;7903.0;8161.0;Weitere Erläuterungen im Regionalszenario, Kapitel 5.11.;6440.5700000000015;8786.37;7849.299999999999;12464.359999999997;Inklusive (kleiner) Blockheizkraftwerke und Abfallkraftwerke.
+"Bayern
+(Hinweis unten)";Wärmepumpen (für dezentrale Wärmelösungen);2135.0;5423.0;8238.0;13208.0;;8795.640000000001;12423.220000000001;9766.350000000002;14789.540000000006;Summe der installierten Bezugsleistungen aller Haushalts-Wärmepumpen. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Geräte gleichzeitig verbrauchen.
+"Bayern
+(Hinweis unten)";Elektrischer Bedarf für zentrale Wärmelösungen;34.0;897.0;2100.0;2527.0;;1056.8599999999976;2013.6299999999906;3036.149999999986;3314.4499999999844;
+"Bayern
+(Hinweis unten)";Elektromobilität;4198.0;19922.0;48406.0;69508.0;Weitere Erläuterungen im Regionalszenario, Kapitel 5.2.;38153.46;46651.960000000014;48177.29999999999;56629.850000000006;Summe der installierten Bezugsleistungen aller E-Fahrzeuge. Der Wert ist als theoretisch maximal abrufbare Leistung zu interpretieren. Die tatsächliche maximal abgerufene Leistung liegt deutlich darunter, da nicht alle Fahrzeuge gleichzeitig laden.
+"Bayern
+(Hinweis unten)";Konventionelle Last (umfasst Haushalte, Gewerbe, Handel, Industrie, Landwirtschaft);14777.0;15044.0;15211.0;15705.0;Weitere Erläuterungen im Regionalszenario, Kapitel 5.4.;11347.39;11156.94;11333.04;11081.15;Umfasst Haushalte sowie Gewerbe, Handel und Dienstleistungen (ohne Wärmepumpen und Fernwärme sowie neu hinzukommende Rechenzentren), Industrie, Verkehr (ohne Elektromobilität), ohne ÜNB-Netzverluste.
+"Bayern
+(Hinweis unten)";Stand-alone Rechenzentren;147.0;1409.0;2671.0;3073.0;;730.0;730.0;967.08;967.08;Umfasst neu hinzukommende Rechenzentren.
+"Bayern
+(Hinweis unten)";Elektrolyseure;0.0;281.0;520.0;1777.0;;512.3900000000001;1008.0;1474.2899999999995;2216.7899999999995;Ohne Elektrolyse auf See. Regionalisierung vorläufig.
+"Bayern
+(Hinweis unten)";Kleinbatteriespeicher (< 1 MW);2190.0;6296.0;8660.0;11552.0;;8379.41;10134.040000000005;10508.619999999995;12599.019999999999;
+"Bayern
+(Hinweis unten)";Großbatteriespeicher (ab 1 MW);625.0;6356.0;10906.0;14857.0;;3092.77;3092.77;5912.0;5824.07;
+"Bayern
+(Hinweis unten)";Pumpspeicher;390.0;390.0;690.0;690.0;;701.94;701.94;701.94;701.94;Ohne Speicherwasserkraftwerke und ohne Pumpspeicher, die geographisch nicht in Deutschland liegen.
+"Die Prognosen der Planungsregion Bayern bestehen aus einem ""Basisszenario"" und einem ""Effizienzszenario"".
+Die Prognosezahlen auf diesem Tabellenblatt bilden die Mittelwerte zwischen beiden Szenarien ab und dienen hier ausschließlich der zusammenfassenden Darstellung.
+Für eine vollständige Betrachtung siehe das Tabellenblatt ""Bayern"" sowie das Regionalszenario 2025 der Planungsregion Bayern.";;;;;;;;;;;

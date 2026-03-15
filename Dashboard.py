@@ -8,6 +8,8 @@ import streamlit as st
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "output" / "df_data.csv"
 BESS_DATA_PATH = BASE_DIR / "output" / "df_bess_data.csv"
+OVERVIEW_DATA_PATH = BASE_DIR / "output" / "df_overview.csv"
+RAW_BESS_INPUT_PATH = BASE_DIR / "input" / "mstr_bess_50KW_betrieb.csv"
 
 
 @st.cache_data
@@ -24,6 +26,22 @@ def load_bess_data() -> pd.DataFrame:
         return pd.DataFrame()
 
     return pd.read_csv(BESS_DATA_PATH, sep=";", encoding="utf-8-sig")
+
+
+@st.cache_data
+def load_raw_bess_input() -> pd.DataFrame:
+    if not RAW_BESS_INPUT_PATH.exists():
+        return pd.DataFrame()
+
+    return pd.read_csv(RAW_BESS_INPUT_PATH, sep=";", encoding="utf-8-sig")
+
+
+@st.cache_data
+def load_overview_data() -> pd.DataFrame:
+    if not OVERVIEW_DATA_PATH.exists():
+        return pd.DataFrame()
+
+    return pd.read_csv(OVERVIEW_DATA_PATH, sep=";", encoding="utf-8-sig")
 
 
 st.set_page_config(
@@ -68,6 +86,78 @@ st.markdown(
     [data-testid="stSegmentedControl"] {
         margin-bottom: 1rem;
     }
+
+    div.stButton > button {
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(22, 27, 38, 0.78);
+        color: #e5e7eb;
+        font-weight: 600;
+    }
+
+    div.stButton > button:hover {
+        border-color: rgba(96, 165, 250, 0.65);
+        background: rgba(30, 41, 59, 0.95);
+    }
+
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border-color: rgba(147, 197, 253, 0.95);
+        color: white;
+        box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.25), 0 12px 30px rgba(37, 99, 235, 0.35);
+    }
+
+    div.stButton > button[kind="secondary"] {
+        background: rgba(22, 27, 38, 0.78);
+        border-color: rgba(148, 163, 184, 0.22);
+        color: #e5e7eb;
+    }
+
+    .bess-card {
+        background: rgba(22, 27, 38, 0.82);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        padding: 1rem 1rem 1.1rem 1rem;
+        min-height: 210px;
+        height: 100%;
+        margin-bottom: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bess-card-title {
+        font-size: 0.98rem;
+        font-weight: 700;
+        line-height: 1.35;
+        color: #f8fafc;
+        margin-bottom: 0.55rem;
+    }
+
+    .bess-card-meta {
+        font-size: 0.88rem;
+        color: #cbd5e1;
+        margin-bottom: 0.3rem;
+    }
+
+    .bess-bubble-wrap {
+        margin-top: auto;
+        padding-top: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .bess-bubble {
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, #93c5fd, #2563eb 60%, #1d4ed8 100%);
+        flex: 0 0 auto;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
+    }
+
+    [data-testid="column"] > div:has(.bess-card) {
+        padding: 0.35rem 0.45rem;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -75,6 +165,8 @@ st.markdown(
 
 df_data = load_data()
 df_bess_data = load_bess_data()
+df_overview = load_overview_data()
+df_bess_raw = load_raw_bess_input()
 
 st.title("Voltpark VNB Tool")
 st.subheader("VNB Dashboard")
@@ -83,6 +175,460 @@ st.caption("Uebersicht ueber alle geladenen VNB-Daten")
 if df_data.empty:
     st.warning("Keine Daten in 'output/df_data.csv' gefunden.")
     st.stop()
+
+if not df_overview.empty:
+    st.markdown("---")
+    st.header("Prognosen fuer Regionalszenarien")
+
+    valid_regions = ["Nord", "Ost", "Mitte", "West", "Südwest", "Bayern"]
+
+    df_overview_clean = df_overview.copy()
+    df_overview_clean["Planungsregion"] = (
+        df_overview_clean["Planungsregion"].astype(str)
+        .str.replace("\n", " ", regex=False)
+        .str.replace(r"\s+", " ", regex=True)
+        .str.replace("Bayern (Hinweis unten)", "Bayern", regex=False)
+        .str.strip()
+    )
+    df_overview_clean = df_overview_clean[
+        df_overview_clean["Planungsregion"].isin(valid_regions)
+    ].copy()
+
+    overview_year_cols = {
+        2024: "Verteilnetzbetreiber_Bestand_2024.0",
+        2030: "Verteilnetzbetreiber_Prognosen_2030.0",
+        2035: "Verteilnetzbetreiber_Prognosen_2035.0",
+        2045: "Verteilnetzbetreiber_Prognosen_2045.0",
+    }
+    year_lookup = {column: year for year, column in overview_year_cols.items()}
+
+    st.subheader("Technologievergleich innerhalb einer Planungsregion")
+
+    region_options = (
+        df_overview_clean["Planungsregion"]
+        .dropna()
+        .drop_duplicates()
+        .sort_values()
+        .tolist()
+    )
+
+    if "dashboard_selected_region" not in st.session_state:
+        st.session_state.dashboard_selected_region = (
+            "Nord" if "Nord" in region_options else region_options[0]
+        )
+
+    st.caption("Planungsregion")
+    for idx, region_name in enumerate(region_options):
+        if idx % 3 == 0:
+            region_cols = st.columns(3)
+        with region_cols[idx % 3]:
+            if st.button(
+                region_name,
+                use_container_width=True,
+                key=f"dashboard_region_{idx}",
+                type=(
+                    "primary"
+                    if st.session_state.dashboard_selected_region == region_name
+                    else "secondary"
+                ),
+            ):
+                st.session_state.dashboard_selected_region = region_name
+                st.rerun()
+
+    selected_region = st.session_state.dashboard_selected_region
+
+    category_patterns = {
+        "Photovoltaik": r"Photovoltaik",
+        "Windenergie": r"Windenergie",
+        "Konventionelle Kraftwerke": r"Konventionelle Kraftwerke",
+        "Kleinbatteriespeicher": r"Kleinbatteriespeicher",
+        "Großbatteriespeicher": r"Großbatteriespeicher|Grossbatteriespeicher",
+    }
+
+    region_compare_df = df_overview_clean.loc[
+        df_overview_clean["Planungsregion"].eq(selected_region),
+        ["Planungsregion", "Anlagenart", *overview_year_cols.values()],
+    ].copy()
+
+    region_compare_frames = []
+    for label, pattern in category_patterns.items():
+        subset = region_compare_df.loc[
+            region_compare_df["Anlagenart"].astype(str).str.contains(
+                pattern, case=False, na=False
+            )
+        ].copy()
+        if subset.empty:
+            continue
+
+        subset = subset.melt(
+            id_vars=["Planungsregion", "Anlagenart"],
+            value_vars=list(overview_year_cols.values()),
+            var_name="year_col",
+            value_name="value",
+        )
+        subset["year"] = subset["year_col"].map(year_lookup)
+        subset["value"] = pd.to_numeric(subset["value"], errors="coerce")
+        subset["category_group"] = label
+        region_compare_frames.append(subset)
+
+    if region_compare_frames:
+        region_compare_long = pd.concat(region_compare_frames, ignore_index=True)
+        region_compare_long = (
+            region_compare_long.groupby(["year", "category_group"], as_index=False)["value"]
+            .sum()
+            .dropna(subset=["value"])
+        )
+
+        region_compare_chart = (
+            alt.Chart(region_compare_long)
+            .mark_line(point=True, strokeWidth=3)
+            .encode(
+                x=alt.X("year:O", title="Jahr"),
+                y=alt.Y("value:Q", title="Leistung / Prognosewert"),
+                color=alt.Color("category_group:N", title="Kategorie"),
+                tooltip=[
+                    alt.Tooltip("category_group:N", title="Kategorie"),
+                    alt.Tooltip("year:O", title="Jahr"),
+                    alt.Tooltip("value:Q", title="Wert", format=",.2f"),
+                ],
+            )
+            .properties(height=420)
+        )
+
+        st.altair_chart(region_compare_chart, use_container_width=True)
+
+    st.subheader("Technologiemix innerhalb einer Planungsregion")
+
+    mix_region_options = region_options
+
+    if "dashboard_mix_region" not in st.session_state:
+        st.session_state.dashboard_mix_region = (
+            "Nord" if "Nord" in mix_region_options else mix_region_options[0]
+        )
+
+    st.caption("Planungsregion fuer Technologiemix")
+    for idx, region_name in enumerate(mix_region_options):
+        if idx % 3 == 0:
+            mix_region_cols = st.columns(3)
+        with mix_region_cols[idx % 3]:
+            if st.button(
+                region_name,
+                use_container_width=True,
+                key=f"dashboard_mix_region_{idx}",
+                type=(
+                    "primary"
+                    if st.session_state.dashboard_mix_region == region_name
+                    else "secondary"
+                ),
+            ):
+                st.session_state.dashboard_mix_region = region_name
+                st.rerun()
+
+    selected_mix_region = st.session_state.dashboard_mix_region
+
+    mix_category_patterns = {
+        "Photovoltaik": r"Photovoltaik",
+        "Windenergie": r"Windenergie",
+        "Sonstige erneuerbare Erzeugung": r"Sonstige erneuerbare Erzeugung",
+        "Konventionelle Kraftwerke": r"Konventionelle Kraftwerke",
+    }
+
+    region_mix_df = df_overview_clean.loc[
+        df_overview_clean["Planungsregion"].eq(selected_mix_region),
+        ["Planungsregion", "Anlagenart", *overview_year_cols.values()],
+    ].copy()
+
+    mix_frames = []
+    for label, pattern in mix_category_patterns.items():
+        subset = region_mix_df.loc[
+            region_mix_df["Anlagenart"].astype(str).str.contains(
+                pattern, case=False, na=False
+            )
+        ].copy()
+        if subset.empty:
+            continue
+
+        subset = subset.melt(
+            id_vars=["Planungsregion", "Anlagenart"],
+            value_vars=list(overview_year_cols.values()),
+            var_name="year_col",
+            value_name="value",
+        )
+        subset["year"] = subset["year_col"].map(year_lookup)
+        subset["value"] = pd.to_numeric(subset["value"], errors="coerce")
+        subset["category_group"] = label
+        mix_frames.append(subset)
+
+    if mix_frames:
+        region_mix_long = pd.concat(mix_frames, ignore_index=True)
+        region_mix_long = (
+            region_mix_long.groupby(["year", "category_group"], as_index=False)["value"]
+            .sum()
+            .dropna(subset=["value"])
+        )
+
+        mix_chart = (
+            alt.Chart(region_mix_long)
+            .transform_joinaggregate(year_total="sum(value)", groupby=["year"])
+            .transform_calculate(share="datum.value / datum.year_total")
+            .mark_bar()
+            .encode(
+                x=alt.X("year:O", title="Jahr"),
+                y=alt.Y(
+                    "value:Q",
+                    title="Anteil",
+                    stack="normalize",
+                    axis=alt.Axis(format="%"),
+                ),
+                color=alt.Color(
+                    "category_group:N",
+                    title="Kategorie",
+                    scale=alt.Scale(
+                        domain=[
+                            "Photovoltaik",
+                            "Windenergie",
+                            "Sonstige erneuerbare Erzeugung",
+                            "Konventionelle Kraftwerke",
+                        ],
+                        range=[
+                            "#facc15",
+                            "#2563eb",
+                            "#166534",
+                            "#8b5e34",
+                        ],
+                    ),
+                ),
+                tooltip=[
+                    alt.Tooltip("category_group:N", title="Kategorie"),
+                    alt.Tooltip("year:O", title="Jahr"),
+                    alt.Tooltip("value:Q", title="Wert", format=",.2f"),
+                    alt.Tooltip("share:Q", title="Anteil", format=".1%"),
+                ],
+            )
+            .properties(height=420)
+        )
+
+        st.altair_chart(mix_chart, use_container_width=True)
+
+    st.subheader("Erneuerbare Erzeugung nach Planungsregion")
+
+    generation_df = df_overview_clean[
+        ["Planungsregion", "Anlagenart", *overview_year_cols.values()]
+    ].copy()
+
+    generation_category_patterns = {
+        "Erneuerbare Erzeugung": (
+            r"Photovoltaik|Windenergie|Sonstige erneuerbare Erzeugung"
+        ),
+    }
+
+    generation_frames = []
+    for label, pattern in generation_category_patterns.items():
+        subset = generation_df.loc[
+            generation_df["Anlagenart"].astype(str).str.contains(
+                pattern, case=False, na=False
+            )
+        ].copy()
+        if subset.empty:
+            continue
+
+        subset = subset.melt(
+            id_vars=["Planungsregion", "Anlagenart"],
+            value_vars=list(overview_year_cols.values()),
+            var_name="year_col",
+            value_name="value",
+        )
+        subset["year"] = subset["year_col"].map(year_lookup)
+        subset["value"] = pd.to_numeric(subset["value"], errors="coerce")
+        subset["series"] = label
+        generation_frames.append(subset)
+
+    if generation_frames:
+        generation_long = pd.concat(generation_frames, ignore_index=True)
+        generation_long = (
+            generation_long.groupby(["Planungsregion", "year", "series"], as_index=False)["value"]
+            .sum()
+            .dropna(subset=["value"])
+        )
+
+        generation_chart = (
+            alt.Chart(generation_long)
+            .mark_line(point=True, strokeWidth=3)
+            .encode(
+                x=alt.X("year:O", title="Jahr"),
+                y=alt.Y("value:Q", title="Leistung / Prognosewert"),
+                color=alt.Color(
+                    "Planungsregion:N",
+                    title="Planungsregion",
+                ),
+                tooltip=[
+                    alt.Tooltip("Planungsregion:N", title="Planungsregion"),
+                    alt.Tooltip("series:N", title="Reihe"),
+                    alt.Tooltip("year:O", title="Jahr"),
+                    alt.Tooltip("value:Q", title="Wert", format=",.2f"),
+                ],
+            )
+            .properties(height=420)
+        )
+
+        st.altair_chart(generation_chart, use_container_width=True)
+
+    st.subheader("Batteriespeicher nach Planungsregion")
+
+    overview_bess_df = df_overview_clean.loc[
+        df_overview_clean["Anlagenart"].astype(str).str.contains(
+            "Großbatteriespeicher|Grossbatteriespeicher|Kleinbatteriespeicher",
+            case=False,
+            na=False,
+        ),
+        ["Planungsregion", "Anlagenart", *overview_year_cols.values()],
+    ].copy()
+
+    overview_bess_long = overview_bess_df.melt(
+        id_vars=["Planungsregion"],
+        value_vars=list(overview_year_cols.values()),
+        var_name="year_col",
+        value_name="value",
+    )
+
+    overview_bess_long["year"] = overview_bess_long["year_col"].map(year_lookup)
+    overview_bess_long["value"] = pd.to_numeric(
+        overview_bess_long["value"], errors="coerce"
+    )
+    overview_bess_long = (
+        overview_bess_long.dropna(subset=["value", "year"])
+        .groupby(["Planungsregion", "year"], as_index=False)["value"]
+        .sum()
+    )
+
+    overview_bess_chart = (
+        alt.Chart(overview_bess_long)
+        .mark_line(point=True, strokeWidth=3)
+        .encode(
+            x=alt.X("year:O", title="Jahr"),
+            y=alt.Y("value:Q", title="Batteriespeicher gesamt (MW)"),
+            color=alt.Color("Planungsregion:N", title="Planungsregion"),
+            tooltip=[
+                alt.Tooltip("Planungsregion:N", title="Planungsregion"),
+                alt.Tooltip("year:O", title="Jahr"),
+                alt.Tooltip("value:Q", title="Batteriespeicher gesamt", format=",.2f"),
+            ],
+        )
+        .properties(height=420)
+    )
+
+    st.altair_chart(overview_bess_chart, use_container_width=True)
+
+    if not df_bess_data.empty:
+        st.subheader("Groesste BESS-Einheiten")
+
+        if not df_bess_raw.empty:
+            top_bess_units = df_bess_raw[
+                [
+                    "MaStR-Nr. des Anschluss-Netzbetreibers",
+                    "Name des Anschluss-Netzbetreibers",
+                    "Anzeige-Name der Einheit",
+                    "MaStR-Nr. der Einheit",
+                    "Bruttoleistung der Einheit",
+                    "Inbetriebnahmedatum der Einheit",
+                ]
+            ].rename(
+                columns={
+                    "MaStR-Nr. des Anschluss-Netzbetreibers": "keys",
+                    "Name des Anschluss-Netzbetreibers": "netzbetreiber_name",
+                    "Anzeige-Name der Einheit": "einheit_name",
+                    "MaStR-Nr. der Einheit": "einheit_mastr",
+                    "Bruttoleistung der Einheit": "bruttoleistung_einheit",
+                    "Inbetriebnahmedatum der Einheit": "inbetriebnahme_datum",
+                }
+            ).copy()
+        else:
+            top_bess_units = df_bess_data[
+                [
+                    "keys",
+                    "netzbetreiber_name",
+                    "bruttoleistung_einheit",
+                    "inbetriebnahme_datum",
+                ]
+            ].copy()
+
+        top_bess_units = top_bess_units.merge(
+            df_data[["MSTR_key", "vnb_names"]].dropna().drop_duplicates(),
+            left_on="keys",
+            right_on="MSTR_key",
+            how="left",
+        )
+
+        top_bess_units["bruttoleistung_kw"] = pd.to_numeric(
+            top_bess_units["bruttoleistung_einheit"]
+            .astype(str)
+            .str.replace(".", "", regex=False)
+            .str.replace(",", ".", regex=False),
+            errors="coerce",
+        )
+        top_bess_units["parsed_date"] = pd.to_datetime(
+            top_bess_units["inbetriebnahme_datum"],
+            format="%d.%m.%Y",
+            errors="coerce",
+        )
+
+        top_bess_units = (
+            top_bess_units.dropna(subset=["bruttoleistung_kw"])
+            .sort_values("bruttoleistung_kw", ascending=False)
+            .head(8)
+            .copy()
+        )
+
+        if not top_bess_units.empty:
+            max_power = top_bess_units["bruttoleistung_kw"].max()
+
+            for start_idx in range(0, len(top_bess_units), 4):
+                card_cols = st.columns(4)
+                chunk = top_bess_units.iloc[start_idx:start_idx + 4]
+
+                for col, (_, row) in zip(card_cols, chunk.iterrows()):
+                    bubble_size_px = (
+                        max(18, min(72, (row["bruttoleistung_kw"] / max_power) * 72))
+                        if max_power
+                        else 18
+                    )
+                    date_text = (
+                        row["parsed_date"].strftime("%d.%m.%Y")
+                        if pd.notna(row["parsed_date"])
+                        else str(row.get("inbetriebnahme_datum", ""))
+                    )
+                    name_text = (
+                        row.get("einheit_name")
+                        if pd.notna(row.get("einheit_name"))
+                        else (
+                            row.get("vnb_names")
+                            if pd.notna(row.get("vnb_names"))
+                            else row.get("keys", "")
+                        )
+                    )
+                    netzbetreiber_text = str(
+                        row.get("netzbetreiber_name", row.get("vnb_names", ""))
+                    )
+                    netzbetreiber_text = (
+                        pd.Series([netzbetreiber_text])
+                        .str.replace(r"\s*\([^)]*\)\s*$", "", regex=True)
+                        .iloc[0]
+                    )
+
+                    col.markdown(
+                        f"""
+                        <div class="bess-card">
+                            <div class="bess-card-title">{name_text}</div>
+                            <div class="bess-card-meta"><strong>Inbetriebnahme:</strong> {date_text}</div>
+                            <div class="bess-card-meta"><strong>Netzbetreiber:</strong> {netzbetreiber_text}</div>
+                            <div class="bess-bubble-wrap">
+                                <div class="bess-bubble" style="width:{bubble_size_px:.0f}px; height:{bubble_size_px:.0f}px;"></div>
+                                <div class="bess-card-meta"><strong>Leistung:</strong> {row["bruttoleistung_kw"]:,.0f} kW</div>
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
 st.subheader("Uebersicht nach Spannungsebene")
 
